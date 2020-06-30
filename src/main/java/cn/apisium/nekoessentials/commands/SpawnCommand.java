@@ -1,6 +1,8 @@
 package cn.apisium.nekoessentials.commands;
 
 import cn.apisium.nekoessentials.Main;
+import cn.apisium.nekoessentials.utils.DatabaseSingleton;
+import cn.apisium.nekoessentials.utils.Serializer;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,6 +18,11 @@ public final class SpawnCommand extends TeleportCommand {
 
     @Override
     public void doTeleport(CommandSender sender, Player p, boolean now) {
-        instance.delayTeleport(p, spawn, now);
+        byte[] bytes = DatabaseSingleton.INSTANCE.get("spawn");
+        if (bytes != null) {
+            instance.delayTeleport(p, Serializer.deserializeLocation(bytes), now);
+        } else {
+            instance.delayTeleport(p, spawn, now);
+        }
     }
 }
